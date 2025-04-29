@@ -24,8 +24,8 @@ type Log struct {
 }
 
 type PG struct {
-	URL     string `env-required:"true" env:"PG_URL"`
-	PoolMax int    `env-required:"true" env:"PG_POOL_MAX"`
+	URL     string `env-required:"true" env:"POSTGRES_URL"`
+	PoolMax int    `env-required:"true" env:"POSTGRES_POOL_MAX"`
 }
 
 type JWT struct {

@@ -3,6 +3,8 @@ package app
 import (
 	"calls-service/auth-service/config"
 	"calls-service/auth-service/internal/controller"
+	"calls-service/auth-service/internal/repository"
+	"calls-service/auth-service/internal/usecase"
 	"calls-service/auth-service/pkg/grpcserver"
 	"calls-service/auth-service/pkg/logger"
 	"calls-service/auth-service/pkg/postgres"
@@ -17,11 +19,11 @@ import (
 )
 
 func Run(cfg *config.Config) {
-	l := logger.New(cfg.Log.Level)
+	l := logger.New(cfg.Level)
 
 	l.Info().Msg("Logger initialized")
 
-	pg, err := postgres.New(cfg.PG.URL, cfg.PG.PoolMax)
+	pg, err := postgres.New(cfg.URL, cfg.PoolMax)
 	if err != nil {
 		l.Fatal().Err(err).Msg("Failed to connect to PostgreSQL")
 	}
@@ -29,14 +31,14 @@ func Run(cfg *config.Config) {
 
 	l.Info().Msg("PostgreSQL initialized")
 
-	// usecase init
+	authUseCase := usecase.New(repository.New(pg))
 
 	server := grpcserver.New(cfg.Port)
 
-	authService := controller.NewAuthService()
+	authService := controller.New(authUseCase, l)
 	authpb.RegisterAuthServiceServer(server, authService)
 
-	reflection.Register(server.GrpcServer)
+	reflection.Register(server.GrpcServer) // local testing
 
 	server.Start()
 

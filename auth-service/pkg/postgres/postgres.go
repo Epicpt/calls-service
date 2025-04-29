@@ -2,9 +2,11 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
@@ -42,4 +44,8 @@ func (p *Postgres) Close() {
 		p.Pool.Close()
 		log.Info().Msg("Подключение к PostgreSQL закрыто")
 	}
+}
+
+func IsNotFoundError(err error) bool {
+	return errors.Is(err, pgx.ErrNoRows)
 }

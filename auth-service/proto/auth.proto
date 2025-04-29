@@ -7,13 +7,6 @@ option go_package = "calls-service/auth-service/proto;authpb";
 service AuthService {
   rpc Register (RegisterRequest) returns (RegisterResponse);
   rpc Login (LoginRequest) returns (LoginResponse);
-  rpc Ping(PingRequest) returns (PingResponse);
-}
-
-message PingRequest {}
-
-message PingResponse {
-  string message = 1;
 }
 
 message RegisterRequest {

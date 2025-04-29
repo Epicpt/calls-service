@@ -2,7 +2,7 @@ package repository
 
 import (
 	"calls-service/auth-service/internal/entity"
-	"calls-service/auth-service/pkg/postgres"
+	"calls-service/pkg/postgres"
 )
 
 type Repository interface {

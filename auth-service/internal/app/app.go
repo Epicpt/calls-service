@@ -5,9 +5,9 @@ import (
 	"calls-service/auth-service/internal/controller"
 	"calls-service/auth-service/internal/repository"
 	"calls-service/auth-service/internal/usecase"
-	"calls-service/auth-service/pkg/grpcserver"
-	"calls-service/auth-service/pkg/logger"
-	"calls-service/auth-service/pkg/postgres"
+	"calls-service/pkg/grpcserver"
+	"calls-service/pkg/logger"
+	"calls-service/pkg/postgres"
 
 	authpb "calls-service/auth-service/proto"
 

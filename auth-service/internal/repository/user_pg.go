@@ -2,17 +2,20 @@ package repository
 
 import (
 	"calls-service/auth-service/internal/entity"
-	"calls-service/auth-service/pkg/postgres"
+	"calls-service/pkg/postgres"
 	"context"
 	"fmt"
+)
+
+const (
+	querySaveUser = `INSERT INTO users (username, password_hash) VALUES ($1, $2)`
+	queryGetUser  = `SELECT id, username, password_hash FROM users WHERE username = $1 LIMIT 1`
 )
 
 func (r *AuthRepo) SaveUser(user entity.User) error {
 	ctx := context.Background()
 
-	query := `INSERT INTO users (username, password_hash) VALUES ($1, $2)`
-
-	_, err := r.Pool.Exec(ctx, query, user.Username, user.Password)
+	_, err := r.Pool.Exec(ctx, querySaveUser, user.Username, user.Password)
 	if err != nil {
 		return fmt.Errorf("error saving user: %w", err)
 	}
@@ -21,10 +24,9 @@ func (r *AuthRepo) SaveUser(user entity.User) error {
 
 func (r *AuthRepo) GetUser(login string) (*entity.User, error) {
 	ctx := context.Background()
-	query := `SELECT id, username, password_hash FROM users WHERE username = $1 LIMIT 1`
 
 	var user entity.User
-	err := r.Pool.QueryRow(ctx, query, login).Scan(&user.ID, &user.Username, &user.Password)
+	err := r.Pool.QueryRow(ctx, queryGetUser, login).Scan(&user.ID, &user.Username, &user.Password)
 	if err != nil {
 		if postgres.IsNotFoundError(err) {
 			return nil, nil

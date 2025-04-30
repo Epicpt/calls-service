@@ -7,9 +7,12 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 )
+
+const uniqueViolationCode = "23505"
 
 type Postgres struct {
 	Pool *pgxpool.Pool
@@ -48,4 +51,9 @@ func (p *Postgres) Close() {
 
 func IsNotFoundError(err error) bool {
 	return errors.Is(err, pgx.ErrNoRows)
+}
+
+func IsUniqueViolation(err error) bool {
+	var pgErr *pgconn.PgError
+	return errors.As(err, &pgErr) && pgErr.Code == uniqueViolationCode
 }

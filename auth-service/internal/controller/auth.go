@@ -42,6 +42,10 @@ func (s *AuthService) Register(ctx context.Context, req *authpb.RegisterRequest)
 	}
 
 	if err := s.u.Create(user); err != nil {
+		if errors.Is(err, usecase.ErrUserAlreadyExists) {
+			s.l.Warn().Err(err).Msg("User already exists")
+			return nil, status.Error(codes.AlreadyExists, "User already exists")
+		}
 		s.l.Err(err).Msg("Failed to create user")
 		return nil, status.Error(codes.Internal, "Failed to create user")
 	}

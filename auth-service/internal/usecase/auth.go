@@ -2,17 +2,20 @@ package usecase
 
 import (
 	"calls-service/auth-service/internal/entity"
+	"calls-service/auth-service/internal/repository"
 	"errors"
 	"fmt"
 )
 
 var ErrUserNotFound = errors.New("user not found")
+var ErrUserAlreadyExists = errors.New("user already exists")
 
 func (uc *UseCase) Create(user entity.User) error {
-	if err := uc.repo.SaveUser(user); err != nil {
-		return err
+	err := uc.repo.SaveUser(user)
+	if errors.Is(err, repository.ErrUserAlreadyExists) {
+		return ErrUserAlreadyExists
 	}
-	return nil
+	return err
 }
 
 func (uc *UseCase) GetUser(login string) (*entity.User, error) {

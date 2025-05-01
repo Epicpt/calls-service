@@ -5,14 +5,14 @@ import (
 )
 
 type Config struct {
-	GRPC
+	HTTP
 	Log c.Log
 	PG  c.PG
 	JWT c.JWT
 }
 
-type GRPC struct {
-	Port string `env-required:"true" env:"GRPC_PORT"`
+type HTTP struct {
+	Port string `env-required:"true" env:"HTTP_PORT"`
 }
 
 func Load() (*Config, error) {

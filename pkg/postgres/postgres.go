@@ -57,3 +57,7 @@ func IsUniqueViolation(err error) bool {
 	var pgErr *pgconn.PgError
 	return errors.As(err, &pgErr) && pgErr.Code == uniqueViolationCode
 }
+
+func IsTxClosed(err error) bool {
+	return errors.Is(err, pgx.ErrTxClosed)
+}

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"calls-service/auth-service/config"
-	"calls-service/auth-service/internal/app"
+	"calls-service/rest-service/internal/app"
+	"calls-service/rest-service/internal/config"
 
 	"log"
 )

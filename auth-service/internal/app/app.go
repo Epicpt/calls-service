@@ -19,11 +19,11 @@ import (
 )
 
 func Run(cfg *config.Config) {
-	l := logger.New(cfg.Level)
+	l := logger.New(cfg.Log.Level)
 
 	l.Info().Msg("Logger initialized")
 
-	pg, err := postgres.New(cfg.URL, cfg.PoolMax)
+	pg, err := postgres.New(cfg.PG.URL, cfg.PG.PoolMax)
 	if err != nil {
 		l.Fatal().Err(err).Msg("Failed to connect to PostgreSQL")
 	}

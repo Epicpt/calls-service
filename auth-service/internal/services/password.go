@@ -24,7 +24,7 @@ func CheckPassword(plainPassword, hashedPassword string) bool {
 func GenerateJWT(userID int64) (string, error) {
 	claims := jwt.MapClaims{
 		"id":  userID,
-		"exp": time.Now().Add(time.Hour * 24 * 7).Unix(), // 7 days
+		"exp": time.Now().Add(time.Hour * 24 * 7).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

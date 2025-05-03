@@ -1,10 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"calls-service/rest-service/internal/app"
 	"calls-service/rest-service/internal/config"
-
-	"log"
 )
 
 func main() {

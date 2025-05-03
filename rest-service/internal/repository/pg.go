@@ -1,9 +1,10 @@
 package repository
 
 import (
+	"context"
+
 	"calls-service/pkg/postgres"
 	"calls-service/rest-service/internal/entity"
-	"context"
 )
 
 type Repository interface {

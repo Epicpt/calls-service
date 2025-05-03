@@ -1,10 +1,12 @@
 package usecase
 
 import (
+	"context"
+
 	authpb "calls-service/auth-service/proto"
+
 	"calls-service/rest-service/internal/entity"
 	"calls-service/rest-service/internal/repository"
-	"context"
 )
 
 type UseCase interface {

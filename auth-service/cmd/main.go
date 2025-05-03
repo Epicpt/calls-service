@@ -1,10 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"calls-service/auth-service/config"
 	"calls-service/auth-service/internal/app"
-
-	"log"
 )
 
 func main() {

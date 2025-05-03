@@ -1,11 +1,12 @@
 package usecase
 
 import (
-	"calls-service/rest-service/internal/entity"
-	"calls-service/rest-service/internal/repository"
 	"context"
 	"errors"
 	"fmt"
+
+	"calls-service/rest-service/internal/entity"
+	"calls-service/rest-service/internal/repository"
 )
 
 var ErrCallNotFound = errors.New("call not found")
@@ -41,7 +42,7 @@ func (u *CallsService) UpdateCallStatus(ctx context.Context, callID, userID int6
 		if errors.Is(err, repository.ErrCallNotFound) {
 			return ErrCallNotFound
 		}
-		return fmt.Errorf("Failed to update call status: %w", err)
+		return fmt.Errorf("failed to update call status: %w", err)
 	}
 	return nil
 }
@@ -51,7 +52,7 @@ func (u *CallsService) DeleteCall(ctx context.Context, callID int64, userID int6
 		if errors.Is(err, repository.ErrCallNotFound) {
 			return ErrCallNotFound
 		}
-		return fmt.Errorf("Failed to delete call: %w", err)
+		return fmt.Errorf("failed to delete call: %w", err)
 	}
 	return nil
 }

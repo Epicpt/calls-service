@@ -1,11 +1,11 @@
 package usecase
 
 import (
-	"calls-service/auth-service/internal/entity"
-	"calls-service/auth-service/internal/repository"
-
 	"errors"
 	"fmt"
+
+	"calls-service/auth-service/internal/entity"
+	"calls-service/auth-service/internal/repository"
 )
 
 var ErrUserNotFound = errors.New("user not found")

@@ -1,6 +1,10 @@
 package app
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"calls-service/auth-service/config"
 	"calls-service/auth-service/internal/controller"
 	"calls-service/auth-service/internal/repository"
@@ -10,10 +14,6 @@ import (
 	"calls-service/pkg/postgres"
 
 	authpb "calls-service/auth-service/proto"
-
-	"os"
-	"os/signal"
-	"syscall"
 
 	"google.golang.org/grpc/reflection"
 )

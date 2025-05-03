@@ -1,13 +1,14 @@
 package controller
 
 import (
-	"calls-service/rest-service/internal/controller/apierrors"
-	"calls-service/rest-service/internal/entity"
-	"calls-service/rest-service/internal/usecase"
 	"errors"
 	"net/http"
 	"regexp"
 	"strconv"
+
+	"calls-service/rest-service/internal/controller/apierrors"
+	"calls-service/rest-service/internal/entity"
+	"calls-service/rest-service/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 )

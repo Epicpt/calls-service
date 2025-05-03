@@ -1,11 +1,12 @@
 package repository
 
 import (
-	"calls-service/pkg/postgres"
-	"calls-service/rest-service/internal/entity"
 	"context"
 	"errors"
 	"fmt"
+
+	"calls-service/pkg/postgres"
+	"calls-service/rest-service/internal/entity"
 
 	"github.com/rs/zerolog/log"
 )

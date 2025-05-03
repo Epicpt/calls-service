@@ -1,7 +1,13 @@
 package app
 
 import (
+	"context"
+	"os"
+	"os/signal"
+	"syscall"
+
 	authpb "calls-service/auth-service/proto"
+
 	"calls-service/pkg/grpcserver"
 	"calls-service/pkg/httpserver"
 	"calls-service/pkg/logger"
@@ -10,10 +16,6 @@ import (
 	"calls-service/rest-service/internal/controller"
 	"calls-service/rest-service/internal/repository"
 	"calls-service/rest-service/internal/usecase"
-	"context"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func Run(cfg *config.Config) {
@@ -30,11 +32,11 @@ func Run(cfg *config.Config) {
 	l.Info().Msg("PostgreSQL initialized")
 
 	ctx := context.Background()
-	conn, err := grpcserver.NewClient(ctx, cfg.GRPC.Name+":"+cfg.GRPC.Port, cfg.ConnectionTimeout)
+	conn, err := grpcserver.NewClient(ctx, cfg.Name+":"+cfg.GRPC.Port, cfg.ConnectionTimeout)
 	if err != nil {
 		l.Fatal().Msgf("failed to connect to auth service: %v", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	l.Info().Msg("GRPC server connected")
 

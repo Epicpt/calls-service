@@ -1,15 +1,15 @@
 package controller
 
 import (
+	"context"
+	"errors"
+	"strings"
+
 	"calls-service/auth-service/internal/entity"
 	"calls-service/auth-service/internal/services"
 	"calls-service/auth-service/internal/usecase"
 
 	authpb "calls-service/auth-service/proto"
-
-	"context"
-	"errors"
-	"strings"
 
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc/codes"

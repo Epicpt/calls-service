@@ -1,11 +1,12 @@
 package middleware
 
 import (
-	"calls-service/rest-service/internal/controller/apierrors"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
+
+	"calls-service/rest-service/internal/controller/apierrors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

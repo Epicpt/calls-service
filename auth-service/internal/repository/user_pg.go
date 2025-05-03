@@ -1,12 +1,12 @@
 package repository
 
 import (
-	"calls-service/auth-service/internal/entity"
-	"calls-service/pkg/postgres"
-
 	"context"
 	"errors"
 	"fmt"
+
+	"calls-service/auth-service/internal/entity"
+	"calls-service/pkg/postgres"
 )
 
 const (

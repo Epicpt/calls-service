@@ -1,9 +1,11 @@
 package usecase
 
 import (
-	authpb "calls-service/auth-service/proto"
-	"calls-service/rest-service/internal/entity"
 	"context"
+
+	authpb "calls-service/auth-service/proto"
+
+	"calls-service/rest-service/internal/entity"
 )
 
 func (u *CallsService) RegisterUser(ctx context.Context, req entity.AuthRequest) error {

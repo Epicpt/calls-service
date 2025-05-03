@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"net/http"
+
 	"calls-service/rest-service/internal/controller/apierrors"
 	"calls-service/rest-service/internal/entity"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc/codes"

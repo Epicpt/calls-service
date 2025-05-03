@@ -1,8 +1,9 @@
 package config
 
 import (
-	c "calls-service/pkg/configuration"
 	"time"
+
+	c "calls-service/pkg/configuration"
 )
 
 type Config struct {

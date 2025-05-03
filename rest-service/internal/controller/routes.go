@@ -13,8 +13,8 @@ type CallsHandler struct {
 	l zerolog.Logger
 }
 
-func New(u *usecase.UseCase, l zerolog.Logger) *CallsHandler {
-	return &CallsHandler{u: *u, l: l}
+func New(u usecase.UseCase, l zerolog.Logger) *CallsHandler {
+	return &CallsHandler{u: u, l: l}
 }
 
 func NewCallsRoutes(router *gin.Engine, h *CallsHandler) {

@@ -1,6 +1,8 @@
 package app
 
 import (
+	authpb "calls-service/auth-service/proto"
+	"calls-service/pkg/grpcserver"
 	"calls-service/pkg/httpserver"
 	"calls-service/pkg/logger"
 	"calls-service/pkg/postgres"
@@ -8,6 +10,7 @@ import (
 	"calls-service/rest-service/internal/controller"
 	"calls-service/rest-service/internal/repository"
 	"calls-service/rest-service/internal/usecase"
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -26,16 +29,29 @@ func Run(cfg *config.Config) {
 
 	l.Info().Msg("PostgreSQL initialized")
 
+	ctx := context.Background()
+	conn, err := grpcserver.NewClient(ctx, cfg.GRPC.Name+":"+cfg.GRPC.Port, cfg.ConnectionTimeout)
+	if err != nil {
+		l.Fatal().Msgf("failed to connect to auth service: %v", err)
+	}
+	defer conn.Close()
+
+	l.Info().Msg("GRPC server connected")
+
+	authClient := authpb.NewAuthServiceClient(conn)
+
 	// Use case
-	usecase := usecase.New(repository.New(pg))
+	callsService := usecase.New(repository.New(pg), authClient)
 
 	// Run server
-	httpServer := httpserver.New(cfg.Port)
+	httpServer := httpserver.New(cfg.HTTP.Port)
 
-	handler := controller.New(usecase, l)
+	handler := controller.New(callsService, l)
 	controller.NewCallsRoutes(httpServer.Engine, handler)
 
 	httpServer.Start()
+
+	l.Info().Msg("Server start")
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)

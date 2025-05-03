@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Server struct {
@@ -64,4 +65,23 @@ func (s *Server) Shutdown() error {
 
 func (s *Server) RegisterService(desc *grpc.ServiceDesc, impl any) {
 	s.GrpcServer.RegisterService(desc, impl)
+}
+
+func NewClient(ctx context.Context, addr string, timeout time.Duration) (*grpc.ClientConn, error) {
+	d := net.Dialer{}
+
+	conn, err := grpc.NewClient(
+		addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithContextDialer(func(ctx context.Context, addr string) (net.Conn, error) {
+			ctx, cancel := context.WithTimeout(ctx, timeout)
+			defer cancel()
+			return d.DialContext(ctx, "tcp", addr)
+		}),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
 }

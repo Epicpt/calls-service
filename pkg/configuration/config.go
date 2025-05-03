@@ -23,7 +23,7 @@ type JWT struct {
 
 func Load[T any](target *T) error {
 	// Для локального запуска
-	if err := godotenv.Load("../../.env"); err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		log.Println("Файл .env не найден")
 	}
 

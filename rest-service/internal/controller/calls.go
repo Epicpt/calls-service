@@ -161,14 +161,14 @@ func (h *CallsHandler) UpdateCallStatus(c *gin.Context) {
 		return
 	}
 
-	if input.Status != "открыто" && input.Status != "закрыто" {
+	if input.Status != "открыта" && input.Status != "закрыта" {
 		c.JSON(http.StatusBadRequest, apierrors.Response{Error: "Invalid status value"})
 		return
 	}
 
 	if err := h.u.UpdateCallStatus(c.Request.Context(), callID, userID, input.Status); err != nil {
 		if errors.Is(err, usecase.ErrCallNotFound) {
-			c.JSON(http.StatusNotFound, apierrors.Response{Error: "Call not found"})
+			c.JSON(http.StatusNotFound, apierrors.Response{Error: "Call not found or does not belong to user"})
 			return
 		}
 		h.l.Error().Err(err).Msg("Failed to update call status")

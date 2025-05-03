@@ -6,7 +6,7 @@ import (
 	"context"
 )
 
-func (u *UseCase) RegisterUser(ctx context.Context, req entity.AuthRequest) error {
+func (u *CallsService) RegisterUser(ctx context.Context, req entity.AuthRequest) error {
 	_, err := u.authClient.Register(ctx, &authpb.RegisterRequest{
 		Username: req.Username,
 		Password: req.Password,
@@ -14,7 +14,7 @@ func (u *UseCase) RegisterUser(ctx context.Context, req entity.AuthRequest) erro
 	return err
 }
 
-func (u *UseCase) LoginUser(ctx context.Context, req entity.AuthRequest) (string, error) {
+func (u *CallsService) LoginUser(ctx context.Context, req entity.AuthRequest) (string, error) {
 	token, err := u.authClient.Login(ctx, &authpb.LoginRequest{
 		Username: req.Username,
 		Password: req.Password,

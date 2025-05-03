@@ -13,9 +13,9 @@ import (
 var ErrCallNotFound = errors.New("call not found")
 
 const (
-	querySaveCall         = `INSERT INTO calls (client_name, phone_number, description, status, created_at, user_id) VALUES ($1, $2, $3, $4, $5, $6)`
-	queryGetUserCalls     = `SELECT id, client_name, phone_number, description, status, created_at, user_id FROM calls WHERE user_id = $1 ORDER BY created_at DESC`
-	queryGetUserCallByID  = `SELECT id, client_name, phone_number, description, status, created_at, user_id FROM calls WHERE id = $1 AND user_id = $2`
+	querySaveCall         = `INSERT INTO calls (client_name, phone_number, description, user_id) VALUES ($1, $2, $3, $4)`
+	queryGetUserCalls     = `SELECT id, client_name, phone_number, description, status, created_at FROM calls WHERE user_id = $1 ORDER BY created_at DESC`
+	queryGetUserCallByID  = `SELECT id, client_name, phone_number, description, status, created_at FROM calls WHERE id = $1 AND user_id = $2`
 	queryUpdateCallStatus = `UPDATE calls SET status = $1 WHERE id = $2 AND user_id = $3`
 	queryDeleteCall       = `DELETE FROM calls WHERE id = $1 AND user_id = $2`
 )
@@ -36,8 +36,6 @@ func (r *CallsRepo) SaveCall(ctx context.Context, call entity.Call) error {
 		call.ClientName,
 		call.PhoneNumber,
 		call.Description,
-		call.Status,
-		call.CreatedAt,
 		call.UserID,
 	)
 	if err != nil {
@@ -68,7 +66,6 @@ func (r *CallsRepo) GetUserCalls(ctx context.Context, userID int64) ([]entity.Ca
 			&call.Description,
 			&call.Status,
 			&call.CreatedAt,
-			&call.UserID,
 		); err != nil {
 			return nil, err
 		}
@@ -82,8 +79,8 @@ func (r *CallsRepo) GetUserCalls(ctx context.Context, userID int64) ([]entity.Ca
 	return calls, nil
 }
 
-func (r *CallsRepo) GetUserCallByID(ctx context.Context, callID, userID int64) (*entity.Call, error) {
-	var call entity.Call
+func (r *CallsRepo) GetUserCallByID(ctx context.Context, callID, userID int64) (*entity.CallResponse, error) {
+	var call entity.CallResponse
 
 	err := r.Pool.QueryRow(ctx, queryGetUserCallByID, callID, userID).Scan(
 		&call.ID,
@@ -92,7 +89,6 @@ func (r *CallsRepo) GetUserCallByID(ctx context.Context, callID, userID int64) (
 		&call.Description,
 		&call.Status,
 		&call.CreatedAt,
-		&call.UserID,
 	)
 
 	if err != nil {

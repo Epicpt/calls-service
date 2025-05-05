@@ -1,0 +1,10 @@
+with-expecter: true
+
+packages:
+  calls-service/rest-service/internal/usecase:
+    interfaces:
+      UseCase:
+        config:
+          dir: ./rest-service/internal/mocks  
+          outpkg: mocks
+          filename: use_case_mock.go

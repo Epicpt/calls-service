@@ -18,7 +18,7 @@ func (u *CallsService) SaveCall(ctx context.Context, call entity.Call) error {
 	return nil
 }
 
-func (u *CallsService) GetUserCalls(ctx context.Context, userID int64) ([]entity.Call, error) {
+func (u *CallsService) GetUserCalls(ctx context.Context, userID int64) ([]entity.CallResponse, error) {
 	calls, err := u.repo.GetUserCalls(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user calls: %w", err)

@@ -9,7 +9,7 @@ import (
 
 type Repository interface {
 	SaveCall(context.Context, entity.Call) error
-	GetUserCalls(context.Context, int64) ([]entity.Call, error)
+	GetUserCalls(context.Context, int64) ([]entity.CallResponse, error)
 	GetUserCallByID(context.Context, int64, int64) (*entity.CallResponse, error)
 	UpdateCallStatus(context.Context, int64, int64, string) error
 	DeleteCall(context.Context, int64, int64) error

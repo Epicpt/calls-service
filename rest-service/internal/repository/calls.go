@@ -50,16 +50,16 @@ func (r *CallsRepo) SaveCall(ctx context.Context, call entity.Call) error {
 	return nil
 }
 
-func (r *CallsRepo) GetUserCalls(ctx context.Context, userID int64) ([]entity.Call, error) {
+func (r *CallsRepo) GetUserCalls(ctx context.Context, userID int64) ([]entity.CallResponse, error) {
 	rows, err := r.Pool.Query(ctx, queryGetUserCalls, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var calls []entity.Call
+	var calls []entity.CallResponse
 	for rows.Next() {
-		var call entity.Call
+		var call entity.CallResponse
 		if err := rows.Scan(
 			&call.ID,
 			&call.ClientName,

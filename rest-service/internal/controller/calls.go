@@ -23,7 +23,7 @@ func (h *CallsHandler) SaveCall(c *gin.Context) {
 		return
 	}
 
-	if !validatePhoneNumber(input.PhoneNumber) {
+	if !ValidatePhoneNumber(input.PhoneNumber) {
 		c.JSON(http.StatusBadRequest, apierrors.Response{Error: "Invalid phone number format"})
 		return
 	}
@@ -55,14 +55,10 @@ func (h *CallsHandler) SaveCall(c *gin.Context) {
 		return
 	}
 
-	//h.l.Info().
+	h.l.Info().Interface("call", newCall).Msg("Call success save")
 
 	c.Status(http.StatusCreated)
-}
-
-func validatePhoneNumber(phone string) bool {
-	re := regexp.MustCompile(`^(\+?\d{1,3}|\d)?[\d\-]{7,15}$`)
-	return re.MatchString(phone)
+	c.Writer.Write([]byte{})
 }
 
 func (h *CallsHandler) GetUserCalls(c *gin.Context) {
@@ -85,22 +81,7 @@ func (h *CallsHandler) GetUserCalls(c *gin.Context) {
 		return
 	}
 
-	responses := make([]entity.CallResponse, len(calls))
-
-	for i, c := range calls {
-		responses[i] = entity.CallResponse{
-			ID:          c.ID,
-			ClientName:  c.ClientName,
-			PhoneNumber: c.PhoneNumber,
-			Description: c.Description,
-			Status:      c.Status,
-			CreatedAt:   c.CreatedAt,
-		}
-	}
-
-	//h.l.Info().
-
-	c.JSON(http.StatusOK, responses)
+	c.JSON(http.StatusOK, calls)
 }
 
 func (h *CallsHandler) GetUserCallByID(c *gin.Context) {
@@ -131,7 +112,11 @@ func (h *CallsHandler) GetUserCallByID(c *gin.Context) {
 		}
 		h.l.Error().Err(err).Msg("Failed to get user call by ID")
 		c.JSON(http.StatusInternalServerError, apierrors.Response{Error: "Failed to get user call"})
+		return
 	}
+
+	h.l.Info().Interface("call", call).Msg("Call success get")
+
 	c.JSON(http.StatusOK, call)
 }
 
@@ -176,7 +161,10 @@ func (h *CallsHandler) UpdateCallStatus(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, apierrors.Response{Error: "Failed to update call status"})
 		return
 	}
-	c.Status(http.StatusNoContent)
+
+	h.l.Info().Int64("callID", callID).Msg("Call success update")
+
+	c.JSON(http.StatusNoContent, nil)
 }
 
 func (h *CallsHandler) DeleteCall(c *gin.Context) {
@@ -209,5 +197,12 @@ func (h *CallsHandler) DeleteCall(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusNoContent)
+	h.l.Info().Int64("callID", callID).Msg("Call success deleted")
+
+	c.JSON(http.StatusNoContent, nil)
+}
+
+func ValidatePhoneNumber(phone string) bool {
+	re := regexp.MustCompile(`^(\+?\d{1,3}|\d)?[\d\-]{7,15}$`)
+	return re.MatchString(phone)
 }

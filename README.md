@@ -23,6 +23,11 @@ mv .env.examples .env
 docker-compose -f docker-compose.yml up -d --build
 ```
 
+### 4. Сервер доступен:
+```sh
+http://localhost:8080/
+```
+
 ### 📡 API Эндпоинты
 #### 🔑 Аутентификация
 

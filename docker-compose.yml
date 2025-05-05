@@ -1,0 +1,54 @@
+services:
+  rest-service:
+    container_name: rest_container
+    build:
+      context: .
+      dockerfile: ./rest-service/Rest.Dockerfile
+    depends_on:
+      auth-service:
+        condition: service_started
+    env_file:
+      - .env
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    restart: always
+
+  auth-service:
+    container_name: auth_container
+    build:
+      context: .
+      dockerfile: ./auth-service/Auth.Dockerfile
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    restart: always
+
+  migrate:
+    image: migrate/migrate
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: [ "-path", "/migrations", "-database", "${POSTGRES_URL}", "up" ]
+    volumes:
+      - ./migrations:/migrations
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
+volumes:
+  postgres_data:

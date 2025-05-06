@@ -1,3 +1,9 @@
+// @title Calls service
+// @version 1.0
+// @description API для обработки заявок
+// @host localhost:8080
+// @BasePath /
+// @schemes http
 package main
 
 import (

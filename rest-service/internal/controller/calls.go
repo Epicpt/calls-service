@@ -15,6 +15,19 @@ import (
 
 const statusOpen = "открыта"
 
+// SaveCall handles the creation of a new call record.
+//
+// @Summary Create a new call
+// @Description Saves a new call with client name, phone number, and description
+// @Tags calls
+// @Accept json
+// @Produce json
+// @Param input body entity.CallDTO true "Call data"
+// @Success 201 {string} string "Created"
+// @Failure 400 {object} apierrors.Response "Invalid input"
+// @Failure 401 {object} apierrors.Response "Unauthorized"
+// @Failure 500 {object} apierrors.Response "Internal server error"
+// @Router /calls [post]
 func (h *CallsHandler) SaveCall(c *gin.Context) {
 	var input entity.CallDTO
 
@@ -61,6 +74,16 @@ func (h *CallsHandler) SaveCall(c *gin.Context) {
 	c.Writer.Write([]byte{})
 }
 
+// GetUserCalls returns all calls for the authenticated user.
+//
+// @Summary Get user calls
+// @Description Retrieves a list of calls belonging to the authenticated user
+// @Tags calls
+// @Produce json
+// @Success 200 {array} entity.CallResponse "List of calls"
+// @Failure 401 {object} apierrors.Response "Unauthorized"
+// @Failure 500 {object} apierrors.Response "Internal server error"
+// @Router /calls [get]
 func (h *CallsHandler) GetUserCalls(c *gin.Context) {
 	userIDAny, exists := c.Get("id")
 	if !exists {
@@ -84,6 +107,19 @@ func (h *CallsHandler) GetUserCalls(c *gin.Context) {
 	c.JSON(http.StatusOK, calls)
 }
 
+// GetUserCallByID returns a specific call by ID for the authenticated user.
+//
+// @Summary Get user call by ID
+// @Description Retrieves details of a specific call belonging to the authenticated user
+// @Tags calls
+// @Produce json
+// @Param id path int true "Call ID"
+// @Success 200 {object} entity.CallResponse "Call details"
+// @Failure 400 {object} apierrors.Response "Invalid call ID"
+// @Failure 401 {object} apierrors.Response "Unauthorized"
+// @Failure 404 {object} apierrors.Response "Call not found"
+// @Failure 500 {object} apierrors.Response "Internal server error"
+// @Router /calls/{id} [get]
 func (h *CallsHandler) GetUserCallByID(c *gin.Context) {
 	userIDAny, exists := c.Get("id")
 	if !exists {
@@ -120,6 +156,21 @@ func (h *CallsHandler) GetUserCallByID(c *gin.Context) {
 	c.JSON(http.StatusOK, call)
 }
 
+// UpdateCallStatus updates the status of a specific call for the authenticated user.
+//
+// @Summary Update call status
+// @Description Updates the status (open or closed) of a specific user call
+// @Tags calls
+// @Accept json
+// @Produce json
+// @Param id path int true "Call ID"
+// @Param input body entity.UpdateCallStatusDTO true "New status"
+// @Success 204 "No Content"
+// @Failure 400 {object} apierrors.Response "Invalid input or status value"
+// @Failure 401 {object} apierrors.Response "Unauthorized"
+// @Failure 404 {object} apierrors.Response "Call not found or does not belong to user"
+// @Failure 500 {object} apierrors.Response "Internal server error"
+// @Router /calls/{id}/status [put]
 func (h *CallsHandler) UpdateCallStatus(c *gin.Context) {
 	userIDAny, exists := c.Get("id")
 	if !exists {
@@ -167,6 +218,19 @@ func (h *CallsHandler) UpdateCallStatus(c *gin.Context) {
 	c.JSON(http.StatusNoContent, nil)
 }
 
+// DeleteCall deletes a specific call for the authenticated user.
+//
+// @Summary Delete call
+// @Description Deletes a call belonging to the authenticated user by its ID
+// @Tags calls
+// @Produce json
+// @Param id path int true "Call ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} apierrors.Response "Invalid call ID"
+// @Failure 401 {object} apierrors.Response "Unauthorized"
+// @Failure 404 {object} apierrors.Response "Call not found or does not belong to user"
+// @Failure 500 {object} apierrors.Response "Internal server error"
+// @Router /calls/{id} [delete]
 func (h *CallsHandler) DeleteCall(c *gin.Context) {
 	userIDAny, exists := c.Get("id")
 	if !exists {

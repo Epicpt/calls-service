@@ -14,8 +14,6 @@ import (
 	"calls-service/pkg/postgres"
 
 	authpb "calls-service/auth-service/proto"
-
-	"google.golang.org/grpc/reflection"
 )
 
 func Run(cfg *config.Config) {
@@ -38,7 +36,7 @@ func Run(cfg *config.Config) {
 	authService := controller.New(authUseCase, l)
 	authpb.RegisterAuthServiceServer(server, authService)
 
-	reflection.Register(server.GrpcServer) // local testing
+	//reflection.Register(server.GrpcServer) // local testing
 
 	server.Start()
 

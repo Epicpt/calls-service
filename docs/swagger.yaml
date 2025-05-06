@@ -1,0 +1,295 @@
+basePath: /
+definitions:
+  apierrors.Response:
+    properties:
+      error:
+        type: string
+    type: object
+  entity.AuthRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  entity.CallDTO:
+    properties:
+      client_name:
+        type: string
+      description:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - client_name
+    - description
+    - phone_number
+    type: object
+  entity.CallResponse:
+    properties:
+      client_name:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      phone_number:
+        type: string
+      status:
+        type: string
+    type: object
+  entity.UpdateCallStatusDTO:
+    properties:
+      status:
+        type: string
+    required:
+    - status
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для обработки заявок
+  title: Calls service
+  version: "1.0"
+paths:
+  /calls:
+    get:
+      description: Retrieves a list of calls belonging to the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of calls
+          schema:
+            items:
+              $ref: '#/definitions/entity.CallResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+      summary: Get user calls
+      tags:
+      - calls
+    post:
+      consumes:
+      - application/json
+      description: Saves a new call with client name, phone number, and description
+      parameters:
+      - description: Call data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CallDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Invalid input
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+      summary: Create a new call
+      tags:
+      - calls
+  /calls/{id}:
+    delete:
+      description: Deletes a call belonging to the authenticated user by its ID
+      parameters:
+      - description: Call ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid call ID
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "404":
+          description: Call not found or does not belong to user
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+      summary: Delete call
+      tags:
+      - calls
+    get:
+      description: Retrieves details of a specific call belonging to the authenticated
+        user
+      parameters:
+      - description: Call ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Call details
+          schema:
+            $ref: '#/definitions/entity.CallResponse'
+        "400":
+          description: Invalid call ID
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "404":
+          description: Call not found
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+      summary: Get user call by ID
+      tags:
+      - calls
+  /calls/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Updates the status (open or closed) of a specific user call
+      parameters:
+      - description: Call ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New status
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UpdateCallStatusDTO'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid input or status value
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "404":
+          description: Call not found or does not belong to user
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+      summary: Update call status
+      tags:
+      - calls
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user and returns a JWT token
+      parameters:
+      - description: User login credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT token
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request format
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "401":
+          description: Invalid username or password
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+      summary: User login
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user with username and password
+      parameters:
+      - description: User registration data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Invalid request format
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "409":
+          description: User already exists
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apierrors.Response'
+      summary: Register user
+      tags:
+      - auth
+schemes:
+- http
+swagger: "2.0"

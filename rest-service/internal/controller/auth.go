@@ -11,6 +11,19 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// register handles user registration.
+//
+// @Summary Register user
+// @Description Registers a new user with username and password
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param input body entity.AuthRequest true "User registration data"
+// @Success 201 "Created"
+// @Failure 400 {object} apierrors.Response "Invalid request format"
+// @Failure 409 {object} apierrors.Response "User already exists"
+// @Failure 500 {object} apierrors.Response "Internal server error"
+// @Router /register [post]
 func (h *CallsHandler) register(c *gin.Context) {
 	var req entity.AuthRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -39,6 +52,19 @@ func (h *CallsHandler) register(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
+// login handles user authentication.
+//
+// @Summary User login
+// @Description Authenticates a user and returns a JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param input body entity.AuthRequest true "User login credentials"
+// @Success 200 {object} map[string]string "JWT token"
+// @Failure 400 {object} apierrors.Response "Invalid request format"
+// @Failure 401 {object} apierrors.Response "Invalid username or password"
+// @Failure 500 {object} apierrors.Response "Internal server error"
+// @Router /login [post]
 func (h *CallsHandler) login(c *gin.Context) {
 	var req entity.AuthRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

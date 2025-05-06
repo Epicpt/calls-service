@@ -10,7 +10,7 @@ import (
 )
 
 type Server struct {
-	GrpcServer      *grpc.Server
+	grpcServer      *grpc.Server
 	addr            string
 	shutdownTimeout time.Duration
 	notify          chan error
@@ -18,7 +18,7 @@ type Server struct {
 
 func New(port string) *Server {
 	s := &Server{
-		GrpcServer:      grpc.NewServer(), // вернуть инкапсуляцию
+		grpcServer:      grpc.NewServer(),
 		addr:            ":" + port,
 		shutdownTimeout: 10 * time.Second,
 		notify:          make(chan error, 1),
@@ -35,7 +35,7 @@ func (s *Server) Start() {
 			return
 		}
 
-		s.notify <- s.GrpcServer.Serve(lis)
+		s.notify <- s.grpcServer.Serve(lis)
 		close(s.notify)
 	}()
 }
@@ -50,13 +50,13 @@ func (s *Server) Shutdown() error {
 
 	stopped := make(chan struct{})
 	go func() {
-		s.GrpcServer.GracefulStop()
+		s.grpcServer.GracefulStop()
 		close(stopped)
 	}()
 
 	select {
 	case <-ctx.Done():
-		s.GrpcServer.Stop()
+		s.grpcServer.Stop()
 		return ctx.Err()
 	case <-stopped:
 		return nil
@@ -64,7 +64,7 @@ func (s *Server) Shutdown() error {
 }
 
 func (s *Server) RegisterService(desc *grpc.ServiceDesc, impl any) {
-	s.GrpcServer.RegisterService(desc, impl)
+	s.grpcServer.RegisterService(desc, impl)
 }
 
 func NewClient(ctx context.Context, addr string, timeout time.Duration) (*grpc.ClientConn, error) {
